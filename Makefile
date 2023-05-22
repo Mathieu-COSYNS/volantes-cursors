@@ -1,5 +1,5 @@
 PREFIX ?= /usr
-CURSOR_THEMES ?= $(patsubst %/index.theme,%,$(wildcard ./dist/*/index.theme))
+CURSOR_THEMES ?= $(patsubst ./src/%/index.theme,%,$(wildcard ./src/*/index.theme))
 
 all: build
 
@@ -10,11 +10,11 @@ clean:
 	-rm -rf build/ dist/ *.tar.gz
 
 install:
-	mkdir -p $(DESTDIR)$(PREFIX)/share/icons
-	cp -R $(CURSOR_THEMES) $(DESTDIR)$(PREFIX)/share/icons
+	mkdir -p $(PREFIX)/share/icons
+	cp -R $(foreach cursor_theme,$(CURSOR_THEMES),./dist/$(cursor_theme)) $(PREFIX)/share/icons
 
 uninstall:
-	-rm -rf $(foreach cursor_theme,$(CURSOR_THEMES),$(DESTDIR)$(PREFIX)/share/icons/$(cursor_theme))
+	-rm -rf $(foreach cursor_theme,$(CURSOR_THEMES),$(PREFIX)/share/icons/$(cursor_theme))
 
 dist: _get_version $(CURSOR_THEMES)
 
